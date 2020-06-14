@@ -53,30 +53,38 @@ public class SystemDependency {
 			List<String> installedSoftware, String[] splitCommand) {
 		String componentToRemove = splitCommand[1];
 		System.out.println("Remove " + componentToRemove);
-		if (installedSoftware.contains(componentToRemove) && checkWheterherComponentRequiredByAnSubComponent(dependentComponentsMap, componentToRemove)) {
+		if (installedSoftware.contains(componentToRemove)
+				&& checkWheterherComponentRequiredByAnSubComponent(dependentComponentsMap, componentToRemove)) {
 			System.out.println("  Removing " + componentToRemove);
 			installedSoftware.remove(componentToRemove);
-			if(dependentComponentsMap.get(componentToRemove) != null) {
-				List<String> masterRemoveComponentList =  dependentComponentsMap.get(componentToRemove).getDependentComponents();
+			if (dependentComponentsMap.get(componentToRemove) != null) {
+				List<String> masterRemoveComponentList = dependentComponentsMap.get(componentToRemove)
+						.getDependentComponents();
 				dependentComponentsMap.remove(componentToRemove);
-				for(String dependentComponentItem:masterRemoveComponentList) {
-					if(dependentComponentsMap.get(dependentComponentItem) != null) {
-						dependentComponentsMap.remove(dependentComponentItem);
-						if(checkWheterherComponentRequiredByAnSubComponent(dependentComponentsMap, dependentComponentItem)) {
+				for (String dependentComponentItem : masterRemoveComponentList) {
+					if (dependentComponentsMap.get(dependentComponentItem) != null) {
+					
+						if (checkWheterherComponentRequiredByAnSubComponent(dependentComponentsMap,
+								dependentComponentItem)) {
+							System.out.println("  Removing " + dependentComponentItem);
+							installedSoftware.remove(dependentComponentItem);
+							dependentComponentsMap.remove(dependentComponentItem);
+							
+						}
+					} else {
+						if (checkWheterherComponentRequiredByAnSubComponent(dependentComponentsMap,
+								dependentComponentItem)) {
 							System.out.println("  Removing " + dependentComponentItem);
 							installedSoftware.remove(dependentComponentItem);
 						}
-					}else {
-						System.out.println("  Removing " + dependentComponentItem);
-						installedSoftware.remove(dependentComponentItem);
 					}
-					
+
 				}
-				
+
 			}
-		}else if(!installedSoftware.contains(componentToRemove)){
+		} else if (!installedSoftware.contains(componentToRemove)) {
 			System.out.println("  " + componentToRemove + " is not installed");
-		}else {
+		} else {
 			System.out.println("  " + componentToRemove + " is still needed");
 		}
 
