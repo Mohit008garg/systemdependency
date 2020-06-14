@@ -1,0 +1,1 @@
+To run this project run simple as java application
